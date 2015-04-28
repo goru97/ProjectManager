@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     User = require('./models/user-model');
+    Project = require('./models/project-model');
 
 var connStr = 'mongodb://localhost:27017/test';
 mongoose.connect(connStr, function(err) {
@@ -104,6 +105,59 @@ newUser.save(function(err) {
 
     });
 
+//REST API for opening existing project
+   router.route('/openProject')
+    .get(function(req, res) {
+      console.log('Opening');
+
+
+var project = new Project({
+project_id: "1",
+project_name: "DRC"
+    });
+
+project.save(function (err) {
+    if (err) 
+      console.log(err);
+    // thats it!
+  });
+
+       // create a user a new user
+var newUser = new User({
+    name:"req.body.name",
+    email:"req.body.email",
+    username:"req.body.username",
+    password:"req.body.password",
+    projects: [project._id]
+});
+
+
+
+// save user to database
+newUser.save(function(err) {
+  //  if (err) throw err;
+  if (err) 
+ res.json({ message: 'User already exists!' }); 
+  else{
+      
+      User.find({})
+            .populate('projects');
+            /*
+            .exec(function(error, users) {
+              if(error)
+                console.log(error);
+              else
+                console.log(JSON.stringify(users, null, "\t"))
+            });
+*/
+res.json({ message: 'Registration Successful!' , code: 200 }); 
+
+  }
+});
+
+console.log('Done');
+
+    });
 
 
 // REGISTER OUR ROUTES -------------------------------

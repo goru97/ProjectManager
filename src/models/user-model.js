@@ -2,12 +2,14 @@ var mongoose = require("mongoose");
  Schema = mongoose.Schema,
  bcrypt = require('bcrypt'),
  SALT_WORK_FACTOR = 10;
+ require('./project-model');
 
 var UserSchema = new Schema({
     name: {type: String},
     email: {type: String},
     username: { type: String, required: true, unique: true, index: true},
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    projects: [{ type: Schema.Types.ObjectId, ref: mongoose.model('Project').schema}]
 });
 
 
