@@ -85,7 +85,7 @@ else if(req.body.email == null || req.body.email == '')
     res.json({ message: 'Email cannot be left blank' })
 else{
 
-       // create a user a new user
+     // create a user a new user
 var newUser = new User({
     name:req.body.name,
     email:req.body.email,
@@ -102,8 +102,9 @@ newUser.save(function(err) {
   res.json({ message: 'Registration Successful!' , code: 200 }); 
 });
 }
+});
 
-    });
+
 
 //REST API for opening existing project
    router.route('/openProject')
@@ -115,6 +116,20 @@ var project = new Project({
 project_id: "1",
 project_name: "DRC"
     });
+
+//var newUser = new User({
+  //  projects: [project]
+//});
+
+User.findOneAndUpdate({username:'goru97'},{ $push: { projects: project } }, {upsert:true}, function(err, users) {
+if(err)
+  console.log(err);
+else{
+  res.json(users)
+}
+}
+);
+  
 /*
 project.save(function (err) {
     if (err) 
@@ -123,16 +138,10 @@ project.save(function (err) {
   });
 */
        // create a user a new user
-var newUser = new User({
-    name:"req.body.name",
-    email:"req.body.email",
-    username:"req.body.username",
-    password:"req.body.password",
-    projects: [project]
-});
 
 
 
+/*
 // save user to database
 newUser.save(function(err) {
   //  if (err) throw err;
@@ -146,16 +155,15 @@ newUser.save(function(err) {
               if(error)
                 console.log(error);
               else{
-                console.log(JSON.stringify(users));
+                res.json(users.projects)
             }
             });
 
 //res.json({ message: 'Registration Successful!' , code: 200 }); 
 
   }
-});
+});*/
 
-console.log('Done');
 
     });
 
