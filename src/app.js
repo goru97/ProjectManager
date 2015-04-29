@@ -115,20 +115,20 @@ var project = new Project({
 project_id: "1",
 project_name: "DRC"
     });
-
+/*
 project.save(function (err) {
     if (err) 
       console.log(err);
     // thats it!
   });
-
+*/
        // create a user a new user
 var newUser = new User({
     name:"req.body.name",
     email:"req.body.email",
     username:"req.body.username",
     password:"req.body.password",
-    projects: [project._id]
+    projects: [project]
 });
 
 
@@ -141,16 +141,16 @@ newUser.save(function(err) {
   else{
       
       User.find({})
-            .populate('projects');
-            /*
+            .populate('projects')
             .exec(function(error, users) {
               if(error)
                 console.log(error);
-              else
-                console.log(JSON.stringify(users, null, "\t"))
+              else{
+                console.log(JSON.stringify(users));
+            }
             });
-*/
-res.json({ message: 'Registration Successful!' , code: 200 }); 
+
+//res.json({ message: 'Registration Successful!' , code: 200 }); 
 
   }
 });

@@ -9,7 +9,7 @@ var UserSchema = new Schema({
     email: {type: String},
     username: { type: String, required: true, unique: true, index: true},
     password: { type: String, required: true },
-    projects: [{ type: Schema.Types.ObjectId, ref: mongoose.model('Project').schema}]
+    projects: [mongoose.model('Project').schema]
 });
 
 
