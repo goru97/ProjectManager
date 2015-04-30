@@ -167,6 +167,93 @@ newUser.save(function(err) {
 
     });
 
+//REST API for saving the project
+    router.route('/saveProject')
+    .post(function(req, res) {
+
+var user = req.body;
+var project = user.project;
+
+console.log(project.tasks);
+
+User.findOne({ "username": user.username},function(err,dbUser){
+if(err){
+  console.log(err);
+}
+
+var projects = dbUser.projects;
+
+if(projects == null || projects.length == 0)
+  dbUser.projects[0] = project;
+
+else{
+for (index = 0; index < projects.length; ++index) {
+console.log(JSON.stringify(projects[index].project_name));
+
+   if(projects[index].project_name == project.project_name){
+    dbUser.projects[index] = project;
+    break;
+   }
+
+}
+}
+
+console.log(JSON.stringify(dbUser));
+
+User.update({userName: dbUser.userName}, {
+    
+    name: dbUser.name, 
+    password: dbUser.password, 
+    userName: dbUser.userName,
+    email: dbUser.email,
+    projects:dbUser.projects
+}, function(err, numberAffected, rawResponse) {
+   if(err)
+    console.log(err);
+  else
+    console.log(numberAffected);
+});
+//dbUser.update();
+
+})
+
+/*
+User.update(
+    { "username": user.username},
+    { "$set": {"projects.0.tasks":project.tasks} },
+    {upsert:true}
+    ,
+    function(err,numAffected) {
+       // something with the result in here
+       console.log(JSON.stringify(numAffected));
+    }
+);
+*/
+
+/*
+
+var project = new Project({
+project_id: "1",
+project_name: "DRC"
+    });
+
+//var newUser = new User({
+  //  projects: [project]
+//});
+
+User.findOneAndUpdate({username:'goru97'},{ $push: { projects: project } }, {upsert:true}, function(err, users) {
+if(err)
+  console.log(err);
+else{
+  res.json(users)
+}
+}
+*/
+
+});
+
+
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

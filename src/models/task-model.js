@@ -5,11 +5,11 @@ var mongoose = require("mongoose");
 var TaskSchema = new Schema({
     project_id: {type: String, required:true},
     task_id: {type: String, required:true},
-    name: {type: String},
+    name: {type: String,unique:true},
     duration: {type: String},
     start: { type: Date},
     end: { type: Date},
-    resources: [mongoose.model('Resource').schema]
+    resources: [String]
 });
 
 
