@@ -11,7 +11,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js"></script>
 
     <script src="js/ui-bootstrap-tpls-0.12.1.js"></script>
+     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script type="text/javascript" src="js/ng-grid.js"></script>
+
     <!--<link rel="stylesheet" href="style.css" />-->
     <script src="js/main.js"></script>
 <style>
@@ -90,7 +92,8 @@
       </ul>
       <div class="tab-content">
         <div ng-class="getTabPaneClass(1)" id="tasks">    
-            <div class='gridStyle' ng-grid='gridOptions'></div>
+            <div class='gridStyle' ng-grid='taskGridOptions'></div>
+           <button class="btn" ng-click="addTask()" >Add Task</button>
          </div>       
         
         <div ng-class="getTabPaneClass(2)" id="resources">     

@@ -1,6 +1,6 @@
 // Code goes here
 var myApp = angular.module('app',['ui.bootstrap', 'ngGrid']);
-
+var removeTemplate = '<input type="button" value="remove" ng-click="removeRow($index)" />';
 myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
   var tabClasses;
   
@@ -43,7 +43,7 @@ for (i = 0; i < $scope.projects.length; i++) {
 $scope.items.push($scope.projects[i].project_name);
 }
 console.log(JSON.stringify($scope.projects));
-open('lg');
+open('sm');
 
 }).
 error(function(data, status, headers, config) {
@@ -74,22 +74,43 @@ $scope.items = [];
   };
 //Modal ends here
 
- $scope.gridData = [{name: "Moroni", age: 50},
-                     {name: "Tiancum", age: 43},
-                     {name: "Jacob", age: 27},
-                     {name: "Nephi", age: 29},
-                     {name: "Enos", age: 34}];
-    $scope.gridOptions = { data: 'gridData' ,
+//Task Grid
+
+
+ $scope.taskGridData = [{name: "Moroni", duration: 50, duration:2, start: "4/14/16", end:"4/24/16", resources: "2343"},
+                      {name: "Moronir", duration: 50, duration:2, start: "4/14/16", end:"4/24/16", resources: "2343"},
+                      {name: "Moronim", duration: 50, duration:2, start: "4/14/16", end:"4/24/16", resources: "2343"},
+                      {name: "Moronio", duration: 50, duration:2, start: "4/14/16", end:"4/24/16", resources: "2343"},
+                      {name: "Moronib", duration: 50, duration:2, start: "4/14/16", end:"4/24/16", resources: "2343"}];
+
+    $scope.taskGridOptions= { 
+      data: 'taskGridData' ,
+     showFilter: true,
+        showColumnMenu: true,
         enableCellSelection: true,
         enableRowSelection: false,
         enableCellEditOnFocus: true,
+        showSelectionCheckbox: true,
+        selectWithCheckboxOnly: true,
+        selectedItems: $scope.selectedTasks,
+        showFooter: true,
         columnDefs: [{field: 'name', displayName: 'Name', enableCellEdit: true}, 
-                     {field:'age', displayName:'Age', enableCellEdit: true}]};
+                     {field:'duration', displayName:'Duration', enableCellEdit: true},
+                     {field:'start', displayName:'Start', enableCellEdit: true},
+                     {field:'end', displayName:'End', enableCellEdit: true},
+                     {field:'resources', displayName:'Resources', enableCellEdit: true},
+                     {field: 'remove', displayName:'', cellTemplate: removeTemplate}]};
 
+ $scope.addTask = function() {
+    $scope.taskGridData.push({});
+  };
 
-
+    $scope.removeRow = function(index) {
+        $scope.taskGridData.splice(index,1);
+    };
 
 });
+
 
 
 
