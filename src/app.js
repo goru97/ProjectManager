@@ -107,21 +107,13 @@ newUser.save(function(err) {
 
 
 //REST API for opening existing project
-   router.route('/openProject')
+   router.route('/openProject/:username')
     .get(function(req, res) {
-      console.log('Opening');
 
+     var username = req.params.username;
+    console.log("username "+username );
 
-var project = new Project({
-project_id: "1",
-project_name: "DRC"
-    });
-
-//var newUser = new User({
-  //  projects: [project]
-//});
-
-User.findOneAndUpdate({username:'goru97'},{ $push: { projects: project } }, {upsert:true}, function(err, users) {
+User.findOne({'username':username}, function(err, users) {
 if(err)
   console.log(err);
 else{
@@ -188,8 +180,6 @@ if(projects == null || projects.length == 0)
 
 else{
 for (index = 0; index < projects.length; ++index) {
-console.log(JSON.stringify(projects[index].project_name));
-
    if(projects[index].project_name == project.project_name){
     dbUser.projects[index] = project;
     break;
@@ -208,14 +198,18 @@ User.update({userName: dbUser.userName}, {
     email: dbUser.email,
     projects:dbUser.projects
 }, function(err, numberAffected, rawResponse) {
-   if(err)
+   if(err){
+    res.json({message:"updateFailed"});
     console.log(err);
-  else
+  }
+  else{
+     res.json({message:"updateSuccess"})
     console.log(numberAffected);
+  }
 });
-//dbUser.update();
 
 })
+});
 
 /*
 User.update(
@@ -249,9 +243,6 @@ else{
 }
 }
 */
-
-});
-
 
 
 

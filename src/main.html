@@ -60,7 +60,7 @@
 <nav class="navbar navbar-default">
 <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-new-window"></span>New Project</button> 
 <button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span>Open Project</button> 
-<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-save-file"></span>Save Project</button>
+<button class="btn btn-default btn-sm" ng-click="saveProject()"><span class="glyphicon glyphicon-save-file"></span>Save Project</button>
 
 </nav>
 </div>
@@ -68,7 +68,7 @@
   <div ng-show="selected">Selection from a modal: {{ selected }}</div>
 <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title">I am a modal!</h3>
+            <h3 class="modal-title">Choose from the projects below:</h3>
         </div>
         <div class="modal-body">
             <ul>
@@ -97,7 +97,8 @@
          </div>       
         
         <div ng-class="getTabPaneClass(2)" id="resources">     
-          {{tab2}}
+         <div class='gridStyle' ng-grid='resourceGridOptions'></div>
+           <button class="btn" ng-click="addResource()" >Add Resource</button>
         </div>
          
       
