@@ -184,7 +184,10 @@ data: {username:$scope.username, password:$scope.password},
 headers: {'Content-Type': 'application/json'}
 }).success(function(data, status, headers, config){
 
-	alert(JSON.stringify(data));
+if(data.message.toString() == 'sign-in Successful')
+	window.location = "./waterfall.html";
+	else
+		alert(data.message.toString());
 }).
 error(function(data, status, headers, config) {
 });

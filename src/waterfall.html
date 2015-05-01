@@ -14,10 +14,11 @@
 
     <script src="js/ui-bootstrap-tpls-0.12.1.js"></script>
      <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+     <script src="http://crisbeto.github.io/angular-svg-round-progressbar/roundProgress.min.js"></script>
     <script type="text/javascript" src="js/ng-grid.js"></script>
 
     <!--<link rel="stylesheet" href="style.css" />-->
-    <script src="js/main.js"></script>
+    <script src="js/waterfall.js"></script>
     <script src="js/datetimepicker.js"></script>
  
 <style>
@@ -74,10 +75,11 @@ nav {
  <div id="projectDiv">Project<span>Manager</span></div></div> 
 
 <nav class="navbar navbar-default">
-<button class="btn btn-default btn-sm" ng-click="newProject()"><span class="glyphicon glyphicon-new-window"></span>New Project</button> 
-<button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span>Open Project</button> 
-<button class="btn btn-default btn-sm" ng-click="save('sm')"><span class="glyphicon glyphicon-save-file"></span>Save Project</button>
+<button class="btn btn-default btn-sm" ng-click="newProject()"><span class="glyphicon glyphicon-new-window"></span> New Project</button> 
+<button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span> Open Project</button> 
+<button class="btn btn-default btn-sm" ng-click="save('sm')"><span class="glyphicon glyphicon-save-file"></span> Save Project</button>
 
+<button class="btn btn-default btn-sm" ng-click="projStats('sm')"><span class="glyphicon glyphicon-stats"></span> Project Status</button>
 </nav>
 
  <!-- <div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
@@ -113,6 +115,37 @@ nav {
             <button class="btn btn-primary" ng-click="ok()">OK</button>
             <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
         </div>
+    </script>
+
+    <!-- Project status Popup -->
+<script type="text/ng-template" id="projStatsModalContent.html">
+     <div class="modal-header">
+            <h3 class="modal-title">Project Status:</h3>
+        </div>  
+<div class="modal-body" style="text-align:center">
+<progressbar animate="true" value="projectProgress " type="success"><b>{{projectProgress }}%</b></progressbar>
+        <div
+    round-progress
+    max=100
+    current="projectProgress"
+    color="#45ccce"
+    bgcolor="#eaeaea"
+    radius="150"
+    stroke="20"
+    semi="false"
+    rounded="true"
+    clockwise="true"
+    iterations="50"
+    animation="easeInOutQuart">
+
+    </div>
+    </div>
+    
+    <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+
     </script>
 
     <div id = "tab-window" class="tabbable tabs-left">

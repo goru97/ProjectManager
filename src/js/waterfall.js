@@ -1,10 +1,10 @@
 // Code goes here
-var myApp = angular.module('app',['ui.bootstrap', 'ngGrid', 'ui.bootstrap.datetimepicker']);
+var myApp = angular.module('app',['ui.bootstrap', 'ngGrid', 'ui.bootstrap.datetimepicker','angular-svg-round-progress']);
 var removeTaskTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-danger" value="remove" ng-click="removeTask($index)" /></div>';
 var removeResourceTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-danger" value="remove" ng-click="removeResource($index)" /></div>';
 var startDateTemplate = '<div class="dropdown"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input type="text" class="form-control" data-ng-model="row.entity.start"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="data.startDate" data-datetimepicker-config="{ dropdownSelector: \'#dropdown1\' }"/></ul></div>';
 var endDateTemplate = '<div class="dropdown"><a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input type="text" class="form-control" data-ng-model="row.entity.end"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onEndTimeSet(newDate, oldDate, row.entity)" data-ng-model="data.endDate" data-datetimepicker-config="{ dropdownSelector: \'#dropdown2\' }"/></ul></div>';
-var progressBarTemplate = '<progressbar animate="false" value="row.entity.progress" type="success"><b>{{row.entity.progress}}%</b></progressbar>';
+var progressBarTemplate = '<progressbar animate="true" value="row.entity.progress" type="success"><b>{{row.entity.progress}}%</b></progressbar>';
 
 myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
   var tabClasses;
@@ -36,14 +36,17 @@ else{
   entity.duration = Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
 
 var currentDate = new Date();
-  if(startDate > currentDate)
+  if(startDate > currentDate){
  entity.progress = 0;
-else if (endDate < currentDate )
+}
+else if (endDate < currentDate ){
   entity.progress = 100;
-else
+  setProjectProgress();
+}
+else{
   entity.progress = parseInt(((Math.round(Math.abs((startDate.getTime() - currentDate.getTime())/(oneDay)))/entity.duration)*100));
-
-
+setProjectProgress();
+}
 }
  
 }
@@ -61,16 +64,28 @@ else{
   entity.end = newDate;
   entity.duration = Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
 var currentDate = new Date();
-if(startDate > currentDate)
+if(startDate > currentDate){
  entity.progress = 0;
-else if (endDate < currentDate )
+}
+else if (endDate < currentDate ){
   entity.progress = 100;
-else
+  setProjectProgress();
+}
+else{
   entity.progress = parseInt(((Math.round(Math.abs((startDate.getTime() - currentDate.getTime())/(oneDay)))/entity.duration)*100));
-
-
+setProjectProgress();
 }
 
+}
+}
+
+var setProjectProgress = function(){
+  var projectProgress=0;
+
+  for(i=0;i<$scope.taskGridData.length;i++){
+projectProgress+=  parseInt($scope.taskGridData[i].progress);
+  }
+  $scope.projectProgress = parseInt(projectProgress/$scope.taskGridData.length);
 }
 
   $scope.getTabClass = function (tabNum) {
@@ -97,6 +112,7 @@ else
     if (confirm("Have you saved your current Project?") == true) {
        $scope.taskGridData = [{}];
        $scope.resourceGridData = [{}];
+       $scope.projectProgress = "";
     } else {
        
     }
@@ -119,6 +135,7 @@ for(i=0;i<projects.length;i++){
   newProject.project_name = projects[i].project_name;
   newProject.project_type = projects[i].project_type;
   newProject.resources = projects[i].resources;
+  newProject.projectProgress = projects[i].projectProgress;
 
 var tasks = projects[i].tasks;
   var newTasks = [];
@@ -161,6 +178,7 @@ var user = {
 username:Username,
 project:{
   project_name:projectName,
+  projectProgress:$scope.projectProgress,
   tasks: $scope.taskGridData,
   resources:$scope.resourceGridData
 }
@@ -224,6 +242,7 @@ for(i=0;i<projects.length;i++){
 if(projects[i].project_name == selectedItem){
 $scope.taskGridData = projects[i].tasks;
 $scope.resourceGridData = projects[i].resources;
+$scope.projectProgress = projects[i].projectProgress;
 break;
 }
 
@@ -263,6 +282,29 @@ $scope.save = function (size) {
 
 //Save confirm Box end
 
+//Project Status Box start
+$scope.projStats = function (size) {
+
+
+    var modalInstance = $modal.open({
+      templateUrl: 'projStatsModalContent.html',
+      controller: 'projStatsModalCtrl',
+      size: size,
+      resolve: {
+        projectProgress: function () {
+          return $scope.projectProgress;
+        }
+      }
+    });
+
+    modalInstance.result.then(function () {
+
+     // alert("Done");
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+//Project Status Box end
 
 //Resource starts here
 $scope.resourceGridData = [{}];
@@ -357,11 +399,6 @@ return myArray.join(",")
 
 angular.module('app').controller('saveModalCtrl', function ($scope, $modalInstance, projectName) {
 
-  //$scope.projectName = projectName;
- /* $scope.selected = {
-    item: $scope.items[0]
-  };
-*/
   $scope.ok = function () {
     $modalInstance.close($scope.projectName);
   };
@@ -380,6 +417,18 @@ angular.module('app').controller('ModalInstanceCtrl', function ($scope, $modalIn
 
   $scope.ok = function () {
     $modalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
+
+angular.module('app').controller('projStatsModalCtrl', function ($scope, $modalInstance, projectProgress) {
+
+$scope.projectProgress = projectProgress;
+  $scope.ok = function () {
+    $modalInstance.close($scope.projectProgress);
   };
 
   $scope.cancel = function () {
