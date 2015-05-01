@@ -5,9 +5,11 @@
   <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/ng-grid.css" />
+  <link rel="stylesheet" type="text/css" href="css/datetimepicker.css" />
     <!--<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>-->
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <!--  <script data-require="angular.js@*" data-semver="1.2.0-rc1" src="http://code.angularjs.org/1.2.0rc1/angular.js"></script>-->
+  <script src="js/moment.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js"></script>
 
     <script src="js/ui-bootstrap-tpls-0.12.1.js"></script>
@@ -16,6 +18,8 @@
 
     <!--<link rel="stylesheet" href="style.css" />-->
     <script src="js/main.js"></script>
+    <script src="js/datetimepicker.js"></script>
+ 
 <style>
 @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
@@ -41,8 +45,20 @@
 }
 .gridStyle {
     border: 1px solid rgb(212,212,212);
-    width: 700px; 
-    height: 300px;
+    width: 100%; 
+    height: 300px
+}
+
+ a:hover {
+  cursor:pointer;
+ }
+ 
+nav {
+  margin-top: -30px;
+}
+
+#tab-window{
+  margin-top: -19px;
 }
 
 </style>
@@ -56,16 +72,17 @@
 </div>
 
  <div id="projectDiv">Project<span>Manager</span></div></div> 
-<div>
+
 <nav class="navbar navbar-default">
-<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-new-window"></span>New Project</button> 
+<button class="btn btn-default btn-sm" ng-click="newProject()"><span class="glyphicon glyphicon-new-window"></span>New Project</button> 
 <button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span>Open Project</button> 
-<button class="btn btn-default btn-sm" ng-click="saveProject()"><span class="glyphicon glyphicon-save-file"></span>Save Project</button>
+<button class="btn btn-default btn-sm" ng-click="save('sm')"><span class="glyphicon glyphicon-save-file"></span>Save Project</button>
 
 </nav>
-</div>
 
-  <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+ <!-- <div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
+
+ <!-- Open project Popup -->
 <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
             <h3 class="modal-title">Choose from the projects below:</h3>
@@ -84,7 +101,21 @@
         </div>
     </script>
 
-    <div class="tabbable tabs-left">
+ <!-- Save project Popup -->
+<script type="text/ng-template" id="saveModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Save as Project Name:</h3>
+        </div>
+        <div class="modal-body">
+          <input type="text" placeholder = "Enter project Name" ng-model = "projectName">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
+    <div id = "tab-window" class="tabbable tabs-left">
       <ul class="nav nav-tabs">
          <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"><a href="#tasks" data-toggle="tab">Tasks</a></li>
          <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)"><a href="#resources" data-toggle="tab">Resources</a></li>
@@ -93,12 +124,12 @@
       <div class="tab-content">
         <div ng-class="getTabPaneClass(1)" id="tasks">    
             <div class='gridStyle' ng-grid='taskGridOptions'></div>
-           <button class="btn" ng-click="addTask()" >Add Task</button>
+           <button class="btn btn-info" ng-click="addTask()" >Add Task</button>
          </div>       
         
         <div ng-class="getTabPaneClass(2)" id="resources">     
          <div class='gridStyle' ng-grid='resourceGridOptions'></div>
-           <button class="btn" ng-click="addResource()" >Add Resource</button>
+           <button class="btn btn-info" ng-click="addResource()" >Add Resource</button>
         </div>
          
       

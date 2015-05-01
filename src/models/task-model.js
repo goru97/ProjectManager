@@ -9,6 +9,7 @@ var TaskSchema = new Schema({
     duration: {type: String},
     start: { type: Date},
     end: { type: Date},
+    progress: {type: String},
     resources: [String]
 });
 

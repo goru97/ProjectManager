@@ -352,7 +352,7 @@ RawBlameHistory     448 lines (447 sloc)  9.246 kb
   background-color: #c9dde1;
 }
 .ngCell {
-  overflow: hidden;
+  /*overflow: hidden;*/
   position: absolute;
   top: 0;
   bottom: 0;

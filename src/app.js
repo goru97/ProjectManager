@@ -111,13 +111,13 @@ newUser.save(function(err) {
     .get(function(req, res) {
 
      var username = req.params.username;
-    console.log("username "+username );
 
-User.findOne({'username':username}, function(err, users) {
+User.findOne({'username':username}, function(err, user) {
 if(err)
   console.log(err);
 else{
-  res.json(users)
+
+  res.json(user)
 }
 }
 );
@@ -185,10 +185,14 @@ for (index = 0; index < projects.length; ++index) {
     break;
    }
 
+ else{
+  dbUser.projects.push(project);
+ }
+
 }
 }
 
-console.log(JSON.stringify(dbUser));
+//console.log(JSON.stringify(dbUser));
 
 User.update({userName: dbUser.userName}, {
     
@@ -203,7 +207,8 @@ User.update({userName: dbUser.userName}, {
     console.log(err);
   }
   else{
-     res.json({message:"updateSuccess"})
+     res.json({message:"updateSuccess"});
+
     console.log(numberAffected);
   }
 });
