@@ -2,8 +2,12 @@ var mongoose = require('mongoose'),
     User = require('./models/user-model');
     Project = require('./models/project-model');
 
-var connStr = 'mongodb://localhost:27017/test';
-mongoose.connect(connStr, function(err) {
+var connStr = 'mongodb://ds031641.mongolab.com:31641/cmpe281';
+var options = {
+  user: 'goru97',
+  pass: 'Welcome@97'
+}
+mongoose.connect(connStr, options, function(err) {
     if (err) throw err;
     console.log('Successfully connected to MongoDB');
 });
@@ -96,8 +100,11 @@ var newUser = new User({
 // save user to database
 newUser.save(function(err) {
   //  if (err) throw err;
-  if (err) 
+  if (err) {
+    console.log(err);
  res.json({ message: 'User already exists!' }); 
+
+}
   else
   res.json({ message: 'Registration Successful!' , code: 200 }); 
 });
@@ -121,41 +128,6 @@ else{
 }
 }
 );
-  
-/*
-project.save(function (err) {
-    if (err) 
-      console.log(err);
-    // thats it!
-  });
-*/
-       // create a user a new user
-
-
-
-/*
-// save user to database
-newUser.save(function(err) {
-  //  if (err) throw err;
-  if (err) 
- res.json({ message: 'User already exists!' }); 
-  else{
-      
-      User.find({})
-            .populate('projects')
-            .exec(function(error, users) {
-              if(error)
-                console.log(error);
-              else{
-                res.json(users.projects)
-            }
-            });
-
-//res.json({ message: 'Registration Successful!' , code: 200 }); 
-
-  }
-});*/
-
 
     });
 
@@ -216,38 +188,6 @@ User.update({userName: dbUser.userName}, {
 })
 });
 
-/*
-User.update(
-    { "username": user.username},
-    { "$set": {"projects.0.tasks":project.tasks} },
-    {upsert:true}
-    ,
-    function(err,numAffected) {
-       // something with the result in here
-       console.log(JSON.stringify(numAffected));
-    }
-);
-*/
-
-/*
-
-var project = new Project({
-project_id: "1",
-project_name: "DRC"
-    });
-
-//var newUser = new User({
-  //  projects: [project]
-//});
-
-User.findOneAndUpdate({username:'goru97'},{ $push: { projects: project } }, {upsert:true}, function(err, users) {
-if(err)
-  console.log(err);
-else{
-  res.json(users)
-}
-}
-*/
 
 
 

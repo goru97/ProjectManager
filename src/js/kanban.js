@@ -1,28 +1,30 @@
-angular.module('ui.bootstrap.demo', ['ui.bootstrap']);
+var App = angular.module('app', ['ngDragDrop']);
 
-angular.module('ui.bootstrap.demo').controller('AccordionDemoCtrl', function ($scope) {
-  $scope.oneAtATime = true;
-
-  $scope.groups = [
-    {
-      title: 'Dynamic Group Header - 1',
-      content: 'Dynamic Group Body - 1'
-    },
-    {
-      title: 'Dynamic Group Header - 2',
-      content: 'Dynamic Group Body - 2'
-    }
+App.controller('kanbanCtrl', function($scope, $timeout) {
+  $scope.list1 = [];
+  $scope.list2 = [];
+  $scope.list3 = [];
+  $scope.list4 = [];
+  
+  $scope.list5 = [
+    { 'title': 'Item 1', 'drag': true },
+    { 'title': 'Item 2', 'drag': true },
+    { 'title': 'Item 3', 'drag': true },
+    { 'title': 'Item 4', 'drag': true },
+    { 'title': 'Item 5', 'drag': true },
+    { 'title': 'Item 6', 'drag': true },
+    { 'title': 'Item 7', 'drag': true },
+    { 'title': 'Item 8', 'drag': true }
   ];
 
-  $scope.items = ['Item 1', 'Item 2', 'Item 3'];
-
-  $scope.addItem = function() {
-    var newItemNo = $scope.items.length + 1;
-    $scope.items.push('Item ' + newItemNo);
-  };
-
-  $scope.status = {
-    isFirstOpen: true,
-    isFirstDisabled: false
+  // Limit items to be dropped in list1
+  $scope.optionsList1 = {
+    accept: function(dragEl) {
+      if ($scope.list1.length >= 2) {
+        return false;
+      } else {
+        return true;
+      }
+    }
   };
 });
