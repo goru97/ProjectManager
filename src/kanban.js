@@ -6,6 +6,7 @@ App.controller('kanbanCtrl', function($scope, $timeout) {
   $scope.list3 = [];
   $scope.list4 = [];
   
+  /*
   $scope.list5 = [
     { 'title': 'Item 1', 'drag': true },
     { 'title': 'Item 2', 'drag': true },
@@ -15,6 +16,13 @@ App.controller('kanbanCtrl', function($scope, $timeout) {
     { 'title': 'Item 6', 'drag': true },
     { 'title': 'Item 7', 'drag': true },
     { 'title': 'Item 8', 'drag': true }
+  ];*/
+
+
+  $scope.list5 = [
+  {'name':'Task1', 'desc':'Description', 'deadline':'Fri May 01 2015 15:43:12 GMT-0700 (PDT)', 'type':'Bug', 'progress':'In Progress'},
+   {'name':'Task1', 'desc':'Description', 'deadline':'Fri May 01 2015 15:43:12 GMT-0700 (PDT)', 'type':'Bug', 'progress':'In Progress'}
+
   ];
 
   // Limit items to be dropped in list1
