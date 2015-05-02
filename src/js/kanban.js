@@ -99,7 +99,8 @@ $scope.addTask = function (size) {
 //For Tasks
 
   $scope.clear = function() {
-    $scope.person.selected = undefined;
+    $scope.task.selected = undefined;
+
   };
 
 
@@ -132,12 +133,12 @@ if(typeof $scope.status.selected != 'undefined')
 newTask.progress = JSON.stringify($scope.status.selected.name);
 newTask.drag = true;
 
-alert(newTask.progress);
-   if(newTask.progress == "Requested")
+
+   if(newTask.progress == '"Requested"')
     $scope.list1.push(newTask);
-  else if(newTask.progress == "In Progress")
+  else if(newTask.progress == '"In Progress"')
     $scope.list2.push(newTask);
-  else if(newTask.progress == "Done")
+  else if(newTask.progress == '"Done"')
     $scope.list3.push(newTask);
   else
     alert("Please select Task Status");
