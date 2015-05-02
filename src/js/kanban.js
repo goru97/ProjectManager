@@ -52,14 +52,10 @@ App.controller('kanbanCtrl', function($scope, $timeout, $http, $modal, $log) {
 
 
   $scope.task = {};
-  $scope.taskTypes = [
-    { name: 'Bug Fix'},{ name: 'Feature Request'},{ name: 'Support Request'}
-  ];
+  $scope.taskTypes = [{ name: 'Bug Fix'},{ name: 'Feature Request'},{ name: 'Support Request'}];
 
   $scope.status = {};
-  $scope.Statuses = [
-    { name: 'Requested'},{ name: 'In Progress'},{ name: 'Done'}
-  ];
+  $scope.Statuses = [{ name: 'Requested'},{ name: 'In Progress'},{ name: 'Done'}];
 
   //Add task Box start
 $scope.addTask = function (size) {
@@ -76,13 +72,20 @@ $scope.addTask = function (size) {
           taskData.task = $scope.task;
           taskData.Statuses = $scope.Statuses;
           taskData.status = $scope.status;
-
+          taskData.taskName = $scope.taskName;
+          taskData.desc = $scope.desc;
+          taskData.assignee = $scope.assignee;
+          taskData.deadline = $scope.deadline;
+          taskData.list1 = $scope.list1;
+          taskData.list2 = $scope.list2;
+          taskData.list3 = $scope.list3;
+ 
           return taskData;
         }
       }
     });
 
-    modalInstance.result.then(function (projectName) {
+    modalInstance.result.then(function (taskData) {
      // saveProject("goru97",projectName);
 
      // alert("Done");
@@ -105,11 +108,41 @@ $scope.addTask = function (size) {
 angular.module('app').controller('addTaskModalCtrl', function ($scope, $modalInstance, taskData) {
 $scope.taskTypes = taskData.taskTypes;
 $scope.task = taskData.task;
-
 $scope.Statuses = taskData.Statuses;
 $scope.status = taskData.status;
+$scope.taskName = taskData.taskName;
+$scope.desc = taskData.desc;
+$scope.assignee = taskData.assignee;
+$scope.taskName = taskData.taskName;
+$scope.deadline = taskData.deadline;
+$scope.list1 = taskData.list1;
+$scope.list2 = taskData.list2;
+$scope.list3 = taskData.list3;
 
-  $scope.ok = function () {
+$scope.ok = function () {
+
+var newTask = {};
+newTask.name = $scope.taskName;
+newTask.desc = $scope.desc;
+newTask.deadline = $scope.deadline;
+if(typeof $scope.task.selected != 'undefined')
+newTask.type = JSON.stringify($scope.task.selected.name);
+newTask.assignee =$scope.assignee;
+if(typeof $scope.status.selected != 'undefined')
+newTask.progress = JSON.stringify($scope.status.selected.name);
+newTask.drag = true;
+
+alert(newTask.progress);
+   if(newTask.progress == "Requested")
+    $scope.list1.push(newTask);
+  else if(newTask.progress == "In Progress")
+    $scope.list2.push(newTask);
+  else if(newTask.progress == "Done")
+    $scope.list3.push(newTask);
+  else
+    alert("Please select Task Status");
+  
+
     $modalInstance.close($scope.projectName);
   };
 

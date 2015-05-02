@@ -152,12 +152,14 @@ nav {
 <div class="modal-body">
 
 <div style="height:300px;">
- <input type="text" placeholder = "Task Name" ng-model = "taskName" style="margin-top:30px;">
+ <input type="text" placeholder = "Task Name" ng-model = "taskName" style="margin-top:10px;"><br>
 
- <div class="dropdown" style="margin-top:20px;"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input  placeholder = "Deadline" type="text" class="form-control" data-ng-model="data.deadline"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="data.deadline" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/></ul></div>
+<textarea ng-model="desc" placeholder = "Give Task Description..." style="margin-top:10px;"></textarea> 
+
+ <div class="dropdown" style="margin-top:20px;"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input  placeholder = "Deadline" type="text" class="form-control" data-ng-model="deadline"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="deadline" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/></ul></div>
 
  <!-- //<p>Selected: {{person.selected}}</p>-->
-  <ui-select ng-model="type.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
+  <ui-select ng-model="task.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
     <ui-select-match placeholder="Task type:">{{$select.selected.name}}</ui-select-match>
     <ui-select-choices repeat="task in taskTypes | propsFilter: {name: $select.search}">
       <div ng-bind-html="task.name | highlight: $select.search"></div>
