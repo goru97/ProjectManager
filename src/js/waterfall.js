@@ -139,6 +139,7 @@ var project_type = projects[i].project_type;
   newProject.project_type = projects[i].project_type;
   newProject.resources = projects[i].resources;
   newProject.projectProgress = projects[i].projectProgress;
+  newProject.extendedFields = projects[i].extendedFields;
 
 var tasks = projects[i].tasks;
   var newTasks = [];
@@ -153,6 +154,7 @@ var tasks = projects[i].tasks;
     newTask.end = new Date(tasks[j].end);
     newTask.progress = tasks[j].progress;
     newTask.resources = tasks[j].resources;
+    newTask.extendedRows = tasks[j].extendedRows;
     newTasks.push(newTask);
   }
 newProject.tasks = newTasks;
@@ -175,20 +177,50 @@ error(function(data, status, headers, config) {
     };
 
 var saveProject = function(Username, projectName){
+  var newTasks = [];
 
+ 
+for(i=0; i<$scope.taskGridData.length;i++){
+ var newTask ={};
+ newTask.project_id = $scope.taskGridData[i].project_id;
+    newTask.task_id = $scope.taskGridData[i].task_id;
+    newTask.name = $scope.taskGridData[i].name;
+    newTask.duration = $scope.taskGridData[i].duration;
+    newTask.start = new Date($scope.taskGridData[i].start);
+    newTask.end = new Date($scope.taskGridData[i].end);
+    newTask.progress = $scope.taskGridData[i].progress;
+    newTask.resources = $scope.taskGridData[i].resources;
+ 
+   var extendedRows = [];
+ for(j=0;j<$scope.additionalColumnDefs.length;j++){
+
+  var row ={};
+  var tempField = $scope.additionalColumnDefs[j].field;
+   row.field = tempField;
+   tempRow = $scope.taskGridData[i];
+   row.value = tempRow[tempField];
+   extendedRows.push(row);
+ }
+    newTask.extendedRows = extendedRows;
+    newTasks.push(newTask);
+ 
+}
+ //alert('newTasks '+JSON.stringify(newTasks));
+//alert(JSON.stringify($scope.taskGridData));
 var user = {
 username:Username,
 project:{
   project_name:projectName,
   project_type:"waterfall",
+  extendedFields: $scope.additionalColumnDefs,
   projectProgress:$scope.projectProgress,
-  tasks: $scope.taskGridData,
+  tasks: newTasks,
   resources:$scope.resourceGridData
 }
 
 };
 
-alert(JSON.stringify(user));
+
 $http({
 url: "http://localhost:8080/api/saveProject",
 method: 'POST',
@@ -241,9 +273,61 @@ $scope.items = [];
       $scope.selected = selectedItem;
 
 var projects = $scope.projects;
+
+$scope.additionalColumnDefs = [];
+$scope.taskColumnDefs = $scope.tempTaskColumnDefs;
+
 for(i=0;i<projects.length;i++){
+
 if(projects[i].project_name == selectedItem){
-$scope.taskGridData = projects[i].tasks;
+
+for(j=0;j<projects[i].extendedFields.length;j++){
+  $scope.additionalColumnDefs.push(projects[i].extendedFields[j]);
+  
+$scope.taskColumnDefs.splice($scope.taskColumnDefs.length-2, 0, projects[i].extendedFields[j]);
+
+} 
+
+var tasks = projects[i].tasks;
+var newTasks =[];
+
+
+
+for(k=0; k<tasks.length;k++){
+  var task ={};
+task.project_id = tasks[k].project_id;
+task.task_id = tasks[k].task_id;
+task.name = tasks[k].name;
+task.desc = tasks[k].desc;
+task.type = tasks[k].type;
+task.duration = tasks[k].duration;
+task.start = tasks[k].start;
+task.end = tasks[k].end;
+task.progress = tasks[k].progress;
+task.resources = tasks[k].resources;
+task.start = tasks[k].start;
+
+for(j=0;j<projects[i].extendedFields.length;j++){
+var temTask = tasks[k];
+var extendedRows = temTask.extendedRows;
+
+for(l=0;l<extendedRows.length;l++){
+  if(projects[i].extendedFields[j].field == extendedRows[l].field){
+  task[projects[i].extendedFields[j].field] = extendedRows[l].value;
+//break;
+}
+}
+//alert(temTask[projects[i].extendedFields[j].field]);
+//task[projects[i].extendedFields[j].field] = temTask[projects[i].extendedFields[j].field];
+} 
+
+
+newTasks.push(task);
+
+}
+
+//$scope.taskGridData = projects[i].tasks;
+$scope.taskGridData = newTasks;
 $scope.resourceGridData = projects[i].resources;
 $scope.projectProgress = projects[i].projectProgress;
 break;
@@ -258,6 +342,33 @@ break;
   };
 //Modal ends here
 
+
+//Save confirm Box start
+$scope.addField = function (size) {
+
+
+    var modalInstance = $modal.open({
+      templateUrl: 'addFieldModalContent.html',
+      controller: 'addFieldModalCtrl',
+      size: size,
+      resolve: {
+       
+      taskColumnDefs: function () {
+          return $scope.taskColumnDefs;
+        },
+        additionalColumnDefs: function () {
+          return $scope.additionalColumnDefs;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (taskColumnDefs) {
+   
+
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
 
 //Save confirm Box start
 $scope.save = function (size) {
@@ -349,9 +460,17 @@ $scope.resourceGridData = [{}];
 
  $scope.taskGridData = [{}];
 
- /*[{name: "Moroni", duration: 50, start: "4/14/16", end:"4/24/16", resources:"Pandey, Saumil"},
-                      {name: "Moronir", duration: 50, start: "4/14/16", end:"4/24/16", resources: "Gaurav, Jalaj"}];
-*/
+ $scope.tempTaskColumnDefs = [{field: 'name', displayName: 'Name', enableCellEdit: true},
+                     {field:'start', displayName:'Start', cellTemplate: startDateTemplate, enableCellEdit: false, width:'250px'},
+                     {field:'end', displayName:'End', cellTemplate: endDateTemplate, enableCellEdit: false, width:'250px'},
+                     {field:'duration', displayName:'Duration (In days)', enableCellEdit: false},
+                     {field:'resources', displayName:'Resources', enableCellEdit: true}, //, cellFilter: 'resourceFilter'},
+                     {field: 'progress', displayName:'Progress', cellTemplate: progressBarTemplate, enableCellEdit: false},
+                     {field: 'remove', displayName:'', cellTemplate: removeTaskTemplate, addField: false}];
+ $scope.taskColumnDefs = $scope.tempTaskColumnDefs;
+
+$scope.additionalColumnDefs =[];
+
 
     $scope.taskGridOptions= { 
       data: 'taskGridData' ,
@@ -366,13 +485,7 @@ $scope.resourceGridData = [{}];
         selectWithCheckboxOnly: true,
         selectedItems: $scope.selectedTasks,
         showFooter: true,
-        columnDefs: [{field: 'name', displayName: 'Name', enableCellEdit: true},
-                     {field:'start', displayName:'Start', cellTemplate: startDateTemplate, enableCellEdit: false, width:'250px'},
-                     {field:'end', displayName:'End', cellTemplate: endDateTemplate, enableCellEdit: false, width:'250px'},
-                     {field:'duration', displayName:'Duration (In days)', enableCellEdit: false},
-                     {field:'resources', displayName:'Resources', enableCellEdit: true}, //, cellFilter: 'resourceFilter'},
-                     {field: 'progress', displayName:'Progress', cellTemplate: progressBarTemplate, enableCellEdit: false},
-                     {field: 'remove', displayName:'', cellTemplate: removeTaskTemplate, enableCellEdit: false}]};
+        columnDefs: 'taskColumnDefs'};
 
  $scope.addTask = function() {
     $scope.taskGridData.push({});
@@ -385,19 +498,6 @@ $scope.resourceGridData = [{}];
                 };
 
 });
-
-
-/*
-.filter('resourceFilter', function() {
-  return function(myArray) {   
-return myArray.join(",")
-  };
-  
-});
-*/
-
-
-
 
 
 angular.module('app').controller('saveModalCtrl', function ($scope, $modalInstance, projectName) {
@@ -432,6 +532,23 @@ angular.module('app').controller('projStatsModalCtrl', function ($scope, $modalI
 $scope.projectProgress = projectProgress;
   $scope.ok = function () {
     $modalInstance.close($scope.projectProgress);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
+
+angular.module('app').controller('addFieldModalCtrl', function ($scope, $modalInstance, taskColumnDefs, additionalColumnDefs) {
+
+  $scope.ok = function () {
+   var newColumn = {};
+    newColumn.field = $scope.fieldName;
+    newColumn.displayName = $scope.fieldName;
+    newColumn.enableCellEdit = $scope.enableCellEdit;
+    taskColumnDefs.splice(taskColumnDefs.length-2, 0, newColumn);
+    additionalColumnDefs.push(newColumn); // For Multi-Tenancy
+    $modalInstance.close(taskColumnDefs);
   };
 
   $scope.cancel = function () {

@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
  Schema = mongoose.Schema,
  require('./resource-model');
+  require('./row-model');
 
 var TaskSchema = new Schema({
     project_id: {type: String, required:true},
@@ -13,6 +14,7 @@ var TaskSchema = new Schema({
     end: { type: Date},
     progress: {type: String}, //Use it as status for kan ban
     resources: [String], //Use single resource as assignee for kan ban
+    extendedRows: [mongoose.model('Row').schema] //For extended fields
 
 });
 
