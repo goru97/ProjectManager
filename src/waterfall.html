@@ -79,6 +79,8 @@ nav {
 <button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span> Open Project</button> 
 <button class="btn btn-default btn-sm" ng-click="save('sm')"><span class="glyphicon glyphicon-save-file"></span> Save Project</button>
 
+<button class="btn btn-default btn-sm" ng-click="addTask()"> <span class="glyphicon glyphicon-plus"></span> Add new Task</button>
+
 <button class="btn btn-default btn-sm" ng-click="projStats('sm')"><span class="glyphicon glyphicon-stats"></span> Project Status</button>
 </nav>
 
@@ -157,7 +159,7 @@ nav {
       <div class="tab-content">
         <div ng-class="getTabPaneClass(1)" id="tasks">    
             <div class='gridStyle' ng-grid='taskGridOptions'></div>
-           <button class="btn btn-info" ng-click="addTask()" >Add Task</button>
+           
          </div>       
         
         <div ng-class="getTabPaneClass(2)" id="resources">     

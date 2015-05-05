@@ -137,8 +137,7 @@ else{
 
 var user = req.body;
 var project = user.project;
-
-console.log(project.tasks);
+console.log("TEST "+JSON.stringify(project));
 
 User.findOne({ "username": user.username},function(err,dbUser){
 if(err){
@@ -151,17 +150,20 @@ if(projects == null || projects.length == 0)
   dbUser.projects[0] = project;
 
 else{
+
+var inserted = false;
+
 for (index = 0; index < projects.length; ++index) {
-   if(projects[index].project_name == project.project_name){
+   if(projects[index].project_name == project.project_name && projects[index].project_type == project.project_type){
     dbUser.projects[index] = project;
+    inserted = true;
     break;
    }
+}
 
- else{
+ if(!inserted){
   dbUser.projects.push(project);
  }
-
-}
 }
 
 //console.log(JSON.stringify(dbUser));

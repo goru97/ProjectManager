@@ -131,6 +131,8 @@ method: 'GET'
 var projects = data.projects;
 var newProjects =[];
 for(i=0;i<projects.length;i++){
+var project_type = projects[i].project_type;
+  if(typeof project_type != 'undefined' && project_type.toLowerCase() == "waterfall"){
   var newProject ={};
   newProject.project_id = projects[i].project_id;
   newProject.project_name = projects[i].project_name;
@@ -155,7 +157,7 @@ var tasks = projects[i].tasks;
   }
 newProject.tasks = newTasks;
 newProjects.push(newProject);
-
+}
 }
 
 //$scope.projects = data.projects; //Getting all the projects
@@ -165,7 +167,6 @@ $scope.items =[];
 for (i = 0; i < $scope.projects.length; i++) {
 $scope.items.push($scope.projects[i].project_name);
 }
-console.log(JSON.stringify($scope.projects));
 open('sm');
 
 }).
@@ -179,6 +180,7 @@ var user = {
 username:Username,
 project:{
   project_name:projectName,
+  project_type:"waterfall",
   projectProgress:$scope.projectProgress,
   tasks: $scope.taskGridData,
   resources:$scope.resourceGridData
@@ -186,7 +188,7 @@ project:{
 
 };
 
-
+alert(JSON.stringify(user));
 $http({
 url: "http://localhost:8080/api/saveProject",
 method: 'POST',
@@ -322,7 +324,7 @@ $scope.resourceGridData = [{}];
         enableColumnResize: true,
         enableRowSelection: false,
         enableCellEditOnFocus: true,
-        showSelectionCheckbox: true,
+        //showSelectionCheckbox: true,
         selectWithCheckboxOnly: true,
         selectedItems: $scope.selectedResources,
         showFooter: true,
@@ -360,7 +362,7 @@ $scope.resourceGridData = [{}];
         enableColumnResize: true,
         enableRowSelection: false,
         enableCellEditOnFocus: true,
-        showSelectionCheckbox: true,
+        //showSelectionCheckbox: true,
         selectWithCheckboxOnly: true,
         selectedItems: $scope.selectedTasks,
         showFooter: true,
