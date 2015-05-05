@@ -275,7 +275,12 @@ $scope.items = [];
 var projects = $scope.projects;
 
 $scope.additionalColumnDefs = [];
-$scope.taskColumnDefs = $scope.tempTaskColumnDefs;
+
+$scope.taskColumnDefs = [];
+
+for(i=0;i<$scope.tempTaskColumnDefs.length;i++){
+$scope.taskColumnDefs.push($scope.tempTaskColumnDefs[i]);
+}
 
 for(i=0;i<projects.length;i++){
 
@@ -314,7 +319,7 @@ var extendedRows = temTask.extendedRows;
 for(l=0;l<extendedRows.length;l++){
   if(projects[i].extendedFields[j].field == extendedRows[l].field){
   task[projects[i].extendedFields[j].field] = extendedRows[l].value;
-//break;
+break;
 }
 }
 //alert(temTask[projects[i].extendedFields[j].field]);
