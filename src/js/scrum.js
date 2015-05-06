@@ -1,7 +1,8 @@
 // Code goes here
 var myApp = angular.module('app',['ui.bootstrap', 'ngGrid', 'ui.bootstrap.datetimepicker']);
 var removeSprintTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-danger" value="remove" ng-click="removeSprint($index)" /></div>';
-var displayTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-default" value="SprintData" ng-click="displayData($index)" /></div>';
+var removeStoryTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-danger" value="remove" ng-click="removeStory($index)" /></div>';
+var displayTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-default" value="Stories" ng-click="displaySprintTasks($index)" /></div>';
 var startDateTemplate = '<div class="dropdown"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input type="text" class="form-control" data-ng-model="row.entity.start"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="data.startDate" data-datetimepicker-config="{ dropdownSelector: \'#dropdown1\' }"/></ul></div>';
 var endDateTemplate = '<div class="dropdown"><a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input type="text" class="form-control" data-ng-model="row.entity.end"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onEndTimeSet(newDate, oldDate, row.entity)" data-ng-model="data.endDate" data-datetimepicker-config="{ dropdownSelector: \'#dropdown2\' }"/></ul></div>';
 var progressBarTemplate = '<progressbar animate="false" value="row.entity.progress" type="success"><b>{{row.entity.progress}}%</b></progressbar>';
@@ -261,41 +262,6 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
 
 //Save confirm Box end
 
-//Save confirm Box start
-
-    $scope.data=[];
-    var displayModalData = function (size) {
-
-        var modalInstance = $modal.open({
-            templateUrl: 'displayTaskContent.html',
-            controller: 'displayTaskContentCtrl',
-            size: size,
-            resolve: {
-                data: function () {
-                    return $scope.data;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selected = selectedItem;
-            var arr =[1,2,3,4,5]
-            var out = $scope.data;
-            for(i=0;i<arr.length;i++){
-                {
-                    $scope.sprintGridData = projects[i].sprints;
-                    $scope.resourceGridData = projects[i].resources;
-                    break;
-                }
-
-            }
-            // alert("Done");
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-
-    };
-
 // Grid
 
     $scope.sprintGridData = [{}];
@@ -329,6 +295,7 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
 
 
     $scope.addSprint = function() {
+        $scope.setActiveTab(1); //If user is in different tab
         $scope.sprintGridData.push({});
     };
 
@@ -338,44 +305,74 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
         $scope.sprintGridData.splice(index, 1);
     };
 
-    $scope.displayData = function() {
 
-        displayModalData('sm');
+
+    $scope.displaySprintTasks = function() {
+
+    var index = this.row.rowIndex;
+$scope.currentSprintIndex =index;
+$scope.storyGridColumnDefs = [];
+$scope.additionalColumnDefs = [];
+    
+
+$scope.taskColumnDefs = [];
+
+for(i=0;i<$scope.tempStoryGridColumnDefs.length;i++){
+$scope.storyGridColumnDefs.push($scope.tempStoryGridColumnDefs[i]);
+}
+
+for(i=1;i<=$scope.sprintGridData[index].duration;i++){
+    var newColumn = {};
+    newColumn.field = "day"+i;
+    newColumn.displayName = "Day"+i;
+    newColumn.enableCellEdit = true;
+    $scope.storyGridColumnDefs.splice($scope.storyGridColumnDefs.length-1, 0, newColumn);
+    $scope.additionalColumnDefs.push(newColumn);
+}
+
+var stories = $scope.sprintGridData[index].tasks;
+
+//alert(JSON.stringify(stories));
+
+if(typeof stories != 'undefined'){
+    $scope.storyGridData = []; //Clear all stories
+for(i=0;i<stories.length;i++){
+var newStory = {};
+newStory.name = stories[i].name;
+newStory.initial_estimate = stories[i].desc;
+var extendedRows = stories[i].extendedRows;
+for(j=0;j<extendedRows.length;j++){
+    for(k=0;k<$scope.additionalColumnDefs.length;k++){
+        var tempColumn = $scope.additionalColumnDefs[k];
+
+        if(extendedRows[j].field == tempColumn.field){
+           newStory[tempColumn.field] =  extendedRows[j].value;
+           break;
+        }
+    }
+}
+$scope.storyGridData.push(newStory);
+
+}
+}
+
+else
+    $scope.storyGridData = [{}];
+
+
+$scope.setActiveTab(2);
+
+       
     };
 
-    // grid to store the StoryData
-
-
-
-});
-
-
-/*
- .filter('resourceFilter', function() {
- return function(myArray) {
- return myArray.join(",")
- };
-
- });
- */
-
-angular.module('app').controller('displayTaskContentCtrl', function ($scope, $modalInstance, data) {
-
-
-    $scope.data = data;
-    $scope.selected = {
-        data: $scope.data[0]
-    };
-
-    $scope.ok = function () {
-        $modalInstance.close($scope.selected.data);
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-
-    // grid to store the StoryData
+$scope.tempStoryGridColumnDefs = [
+            {field: 'name', displayName: 'Story Name', enableCellEdit: true},
+            {field:'initial_estimate', displayName:'Initial Estimate', enableCellEdit: true},
+            {field: 'remove', displayName:'', cellTemplate: removeStoryTemplate, enableCellEdit: false}
+        ];
+    $scope.storyGridColumnDefs = $scope.tempStoryGridColumnDefs;    
+    $scope.additionalColumnDefd = [];
+  // grid to store the StoryData
     $scope.storyGridData = [{}];
 
     $scope.storyGridOptions= {
@@ -391,18 +388,40 @@ angular.module('app').controller('displayTaskContentCtrl', function ($scope, $mo
         selectWithCheckboxOnly: true,
         selectedItems: $scope.selectedSprints,
         showFooter: true,
-        columnDefs: [{field: 'story_id', displayName: 'Story ID', enableCellEdit: true},
-            {field: 'name', displayName: 'Story Name', enableCellEdit: true},
-            {field:'initial_estimate', displayName:'Initial Estimate', enableCellEdit: true},
-            {field:'days', displayName:'day1', enableCellEdit: true},
-            {field:'days', displayName:'day2', enableCellEdit: true},
-            {field:'days', displayName:'day3', enableCellEdit: true},
-            {field:'days', displayName:'day4', enableCellEdit: true},
-            {field:'days', displayName:'day5', enableCellEdit: true},
-            {field:'days', displayName:'day6', enableCellEdit: true},
-            {field: 'remove', displayName:'', cellTemplate: removeSprintTemplate, enableCellEdit: false}
-        ]};
+        columnDefs: 'storyGridColumnDefs'};
 
+ $scope.saveSprint = function() {
+      
+var tasks = [];
+for(i=0;i<$scope.storyGridData.length;i++){
+var task = {};
+var extendedRows = [];
+var story = $scope.storyGridData[i];
+  var storyKeys = Object.keys(story);
+
+for(j=0;j<storyKeys.length;j++){
+    if(storyKeys[j] == 'name')
+        task.name = $scope.storyGridData[i].name;
+    else if(storyKeys[j] == 'initial_estimate')
+     task.desc = story.initial_estimate;
+    else{
+        newRow = {};
+        key = storyKeys[j]
+        newRow.field = key;
+        newRow.value = story[key];
+        extendedRows.push(newRow);
+    }
+}
+task.extendedRows = extendedRows;
+tasks.push(task);
+$scope.sprintGridData[$scope.currentSprintIndex].tasks = tasks;
+alert("Sprint details saved");
+$scope.setActiveTab(1); // Back to sprint tab
+}
+
+Object.keys($scope.storyGridData[0]);
+
+    };
 
     $scope.addStory = function() {
         $scope.storyGridData.push({});
@@ -412,11 +431,6 @@ angular.module('app').controller('displayTaskContentCtrl', function ($scope, $mo
         var index = this.row.rowIndex;
         $scope.storyGridOptions.selectItem(index, false);
         $scope.storyGridData.splice(index, 1);
-    };
-
-    $scope.displayData = function() {
-
-        displayModalData('lg');
     };
 
     $scope.displayCharts = function () {
@@ -479,7 +493,9 @@ angular.module('app').controller('displayTaskContentCtrl', function ($scope, $mo
             }]
         });
     };
+
 });
+
 
 
 angular.module('app').controller('saveModalCtrl', function ($scope, $modalInstance, projectName) {

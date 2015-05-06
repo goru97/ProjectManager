@@ -7,7 +7,7 @@ var TaskSchema = new Schema({
     project_id: {type: String, required:true},
     task_id: {type: String, required:true},
     name: {type: String,unique:true},
-    desc: {type: String},
+    desc: {type: String}, // Use for initial estimate in case of scrum
     type: {type: String}, //Use for kanban type
     duration: {type: String},
     start: { type: Date},
