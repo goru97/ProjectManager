@@ -31,7 +31,7 @@ App.filter('propsFilter', function() {
   }
 });
 
-App.controller('kanbanCtrl', function($scope, $timeout, $http, $modal, $log) {
+App.controller('kanbanCtrl', function($scope, $timeout, $http, $modal, $log, $location) {
   $scope.list1 = [
  // {'id':1, 'name':'Task1', 'desc':'Description', 'deadline':'Fri May 01 2015 15:43:12 GMT-0700 (PDT)', 'type':'Bug Fix', 'assignee':'Gaurav Bajaj','progress': 'Requested', 'drag': true},
    ];
@@ -52,6 +52,11 @@ App.controller('kanbanCtrl', function($scope, $timeout, $http, $modal, $log) {
     }
   };
 */
+
+var url = JSON.stringify($location.absUrl());
+var index = url.indexOf("=");
+$scope.user_id = url.substring(index+1,url.length-1);
+
 
 
   $scope.task = {};
@@ -148,7 +153,7 @@ error(function(data, status, headers, config) {
 $scope.openProject= function(){
 
 $http({
-url: 'http://localhost:8080/api/openProject/goru97',
+url: 'http://localhost:8080/api/openProject/'+$scope.user_id,
 method: 'GET'
 //headers: {'Content-Type': 'application/json'}
 }).success(function(data, status, headers, config){ 
@@ -260,7 +265,7 @@ $scope.save = function (size) {
     });
 
     modalInstance.result.then(function (projectName) {
-      saveProject("goru97",projectName);
+      saveProject($scope.user_id ,projectName);
 
      // alert("Done");
     }, function () {

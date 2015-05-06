@@ -7,7 +7,13 @@ var startDateTemplate = '<div class="dropdown"><a class="dropdown-toggle" id="dr
 var endDateTemplate = '<div class="dropdown"><a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input type="text" class="form-control" data-ng-model="row.entity.end"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onEndTimeSet(newDate, oldDate, row.entity)" data-ng-model="data.endDate" data-datetimepicker-config="{ dropdownSelector: \'#dropdown2\' }"/></ul></div>';
 var progressBarTemplate = '<progressbar class="progress-striped active" value="row.entity.progress" type="success"><b>{{row.entity.progress}}%</b></progressbar>';
 
-myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
+myApp.controller('mainCtrl', function($scope, $http, $modal, $log, $location){
+
+  var url = JSON.stringify($location.absUrl());
+var index = url.indexOf("=");
+$scope.user_id = url.substring(index+1,url.length-1);
+
+
   var tabClasses;
   
   function initTabs() {
@@ -122,7 +128,7 @@ projectProgress+=  parseInt($scope.taskGridData[i].progress);
   $scope.openProject= function(){
 
 $http({
-url: 'http://localhost:8080/api/openProject/goru97',
+url: 'http://localhost:8080/api/openProject/'+$scope.user_id,
 method: 'GET'
 //headers: {'Content-Type': 'application/json'}
 }).success(function(data, status, headers, config){ 
@@ -391,7 +397,7 @@ $scope.save = function (size) {
     });
 
     modalInstance.result.then(function (projectName) {
-      saveProject("goru97",projectName);
+      saveProject($scope.user_id,projectName);
 
      // alert("Done");
     }, function () {

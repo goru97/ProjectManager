@@ -157,17 +157,35 @@ body{
 <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 <body>
 
+
   <div class="body"></div>
 		<div class="grad"></div>
 		<div class="header">
 			<div>Project<span>Manager</span></div>
 		</div>
 		<br>
-		<div class="login" ng-app="pg_manager" ng-controller="pg_ctrl">
+		<div class="login" ng-app="pg_manager" ng-controller="pg_ctrl" >
 				<input type="text" placeholder="username" name="user" ng-model="username"><br>
 				<input type="password" placeholder="password" name="password" ng-model="password"><br>
-				<input type="button" value="Login" ng-click="authenticateUser()">
+				<input type="button" value="Login" ng-click="authenticateUser()"><br>
+
+  <label>
+    <input type="radio" ng-model="model.name" value="waterfall">
+    Waterfall
+  </label>
+  <label>
+    <input type="radio" ng-model="model.name" value="kanban">
+    Kanban
+  </label>
+  <label>
+    <input type="radio" ng-model="model.name" value="scrum">
+    Scrum
+  </label>
+
+
 				<h4>Not a member, <a href="./index.html">register</a></h4>
+
+
 		</div>
 
   <script>
@@ -184,8 +202,14 @@ data: {username:$scope.username, password:$scope.password},
 headers: {'Content-Type': 'application/json'}
 }).success(function(data, status, headers, config){
 
-if(data.message.toString() == 'sign-in Successful')
-	window.location = "./waterfall.html";
+if(data.message.toString() == 'sign-in Successful'){
+if($scope.model.name == "waterfall")
+	window.location = "./waterfall.html?user_id="+$scope.username;
+if($scope.model.name == "kanban")
+	window.location = "./kanban.html?user_id="+$scope.username;
+if($scope.model.name == "scrum")
+	window.location = "./scrum.html?user_id="+$scope.username;
+	}
 	else
 		alert(data.message.toString());
 }).
@@ -193,6 +217,10 @@ error(function(data, status, headers, config) {
 });
 
     }
+
+    $scope.model = {
+        name: 'waterfall'
+      };
 });
 
 

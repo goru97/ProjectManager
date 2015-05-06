@@ -8,7 +8,11 @@ var endDateTemplate = '<div class="dropdown"><a class="dropdown-toggle" id="drop
 var progressBarTemplate = '<progressbar animate="false" value="row.entity.progress" type="success"><b>{{row.entity.progress}}%</b></progressbar>';
 var addSprintTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-default" value="ADD TO SPRINT" ng-click="displayData($index)" /></div>';
 
-myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
+myApp.controller('mainCtrl', function($scope, $http, $modal, $log, $location){
+     var url = JSON.stringify($location.absUrl());
+var index = url.indexOf("=");
+$scope.user_id = url.substring(index+1,url.length-1);
+
     var tabClasses;
 
     function initTabs() {
@@ -107,7 +111,7 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
     $scope.openProject= function(){
 
         $http({
-            url: 'http://localhost:8080/api/openProject/goru97',
+            url: 'http://localhost:8080/api/openProject/'+$scope.user_id,
             method: 'GET'
 //headers: {'Content-Type': 'application/json'}
         }).success(function(data, status, headers, config){
@@ -255,7 +259,7 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
         });
 
         modalInstance.result.then(function (projectName) {
-            saveProject("goru97",projectName);
+            saveProject($scope.user_id,projectName);
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
