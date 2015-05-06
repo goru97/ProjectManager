@@ -116,6 +116,8 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
             var projects = data.projects;
             var newProjects =[];
             for(i=0;i<projects.length;i++){
+                var project_type = projects[i].project_type;
+            if(typeof project_type != 'undefined' && project_type.toLowerCase() == "scrum"){
                 var newProject ={};
                 newProject.project_id = projects[i].project_id;
                 newProject.project_name = projects[i].project_name;
@@ -133,11 +135,12 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
                     newSprint.start = new Date(sprints[j].start);
                     newSprint.end = new Date(sprints[j].end);
                     newSprint.progress = sprints[j].progress;
-                    newSprint.resources = sprints[j].resources;
+                    newSprint.tasks = sprints[j].tasks;
                     newSprints.push(newSprint);
                 }
                 newProject.sprints = newSprints;
                 newProjects.push(newProject);
+                }
 
             }
 
@@ -162,8 +165,8 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
             username:Username,
             project:{
                 project_name:projectName,
-                sprints: $scope.sprintGridData,
-                resources:$scope.resourceGridData
+                project_type:'scrum',
+                sprints: $scope.sprintGridData
             }
         };
 
@@ -228,7 +231,7 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
                 }
 
             }
-            // alert("Done");
+           
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -254,7 +257,6 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
         modalInstance.result.then(function (projectName) {
             saveProject("goru97",projectName);
 
-            // alert("Done");
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -313,8 +315,6 @@ myApp.controller('mainCtrl', function($scope, $http, $modal, $log){
 $scope.currentSprintIndex =index;
 $scope.storyGridColumnDefs = [];
 $scope.additionalColumnDefs = [];
-    
-
 $scope.taskColumnDefs = [];
 
 for(i=0;i<$scope.tempStoryGridColumnDefs.length;i++){
@@ -332,7 +332,6 @@ for(i=1;i<=$scope.sprintGridData[index].duration;i++){
 
 var stories = $scope.sprintGridData[index].tasks;
 
-//alert(JSON.stringify(stories));
 
 if(typeof stories != 'undefined'){
     $scope.storyGridData = []; //Clear all stories

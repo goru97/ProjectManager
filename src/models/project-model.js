@@ -3,6 +3,7 @@ var mongoose = require("mongoose");
  require('./task-model');
  require('./resource-model');
  require('./column-model');
+ require('./sprint-model');
 
 
 var ProjectSchema = new Schema({
@@ -10,9 +11,10 @@ var ProjectSchema = new Schema({
     project_name: {type: String, required:true},
     project_type: {type: String},
     projectProgress: {type: String},
-    extendedFields: [mongoose.model('Column').schema],
+    sprints: [mongoose.model('Sprint').schema],
     tasks: [mongoose.model('Task').schema],
-    resources: [mongoose.model('Resource').schema]
+    resources: [mongoose.model('Resource').schema],
+    extendedFields: [mongoose.model('Column').schema],
 });
 
 
