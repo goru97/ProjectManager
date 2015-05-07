@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html ng-app = "app">
+  <head>
+    <head>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>-->
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-sanitize.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+<link rel="stylesheet" type="text/css" href="css/datetimepicker.css" />
+<link rel="stylesheet" href="css/select.css">
+<script src="js/moment.js"></script>
+     <script src="js/angular-dragdrop.min.js"></script>
+     <script src="js/ui-bootstrap-tpls-0.12.1.js"></script>
+    <script src="js/kanban.js"></script>
+    <script src="js/select.js"></script>
+    <script src="js/datetimepicker.js"></script>
+    <!--<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">-->
+  </head>
+
+<style>
+@import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+
+ #projectDiv {
+  color: #fff;
+  font-family: 'Exo', sans-serif;
+  font-size: 35px;
+  font-weight: 200;
+  margin-left: 10%;
+}
+#projectDiv span {
+  color: #5379fa !important;
+}
+
+.imgContainer {
+ width: 100px;
+ height: 120px;
+}
+.imgContainer img {
+ width: 100%;
+ height: auto;
+}
+.kanbandiv{
+  background-color: #2E9AFE;
+  margin-top: -20px;
+}
+
+.thumbnail { height: 500px !important; 
+  text-align: center; 
+  border-radius: 10px; 
+  border-style: solid;
+  border-color: #2E9AFE #0000FF;
+  margin-top: 10px;
+  /*background: #ED5757;*/
+
+}
+      .btn-droppable {  width: 180px; height: 30px; padding-left: 4px; }
+      .btn-draggable { width: 160px; }
+nav {
+  margin-top: -30px;
+}
+
+a:hover {
+  cursor:pointer;
+ }
+
+</style>
+
+
+<body ng-controller="kanbanCtrl">
+
+ <div class="jumbotron">
+<div class="imgContainer">
+ <img src="http://img4.wikia.nocookie.net/__cb20110805224929/mlp/images/a/a9/AiP_CM_Rainbow_Dash.svg"/>
+</div>
+
+ <div id="projectDiv">Project<span>Manager</span></div></div> 
+
+<nav class="navbar navbar-default">
+<button class="btn btn-default btn-sm" ng-click="newProject()"><span class="glyphicon glyphicon-new-window"></span> New Project</button> 
+<button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span> Open Project</button> 
+<button class="btn btn-default btn-sm" ng-click="save('sm')"><span class="glyphicon glyphicon-save-file"></span> Save Project</button>
+<button class="btn btn-default btn-sm" ng-click="addTask('sm')"> <span class="glyphicon glyphicon-plus"></span> Add new Task</button>
+<button class="btn btn-default btn-sm" ng-click="projStats('sm')"><span class="glyphicon glyphicon-stats"></span> Project Status</button>
+</nav>
+<div  class='kanbandiv'>
+      <div class='contentWrapper ng-cloak'>
+        <div class='content'>
+          <div class="row-fluid" >
+            <ul class="thumbnails">
+
+              <li class="span3" style='margin-left:10px; width:30%'>
+                <div class="thumbnail" data-drop="true" ng-model='list1' data-jqyoui-options="optionsList1" jqyoui-droppable="{multiple:true}">
+                  <h4 style = "font-family: 'Exo', sans-serif;">Future Works!</h4>
+                  <div class="caption">
+                    <div style = "font-family: 'Exo', sans-serif;" class="btn btn-info btn-draggable" ng-repeat="item in list1" ng-show="item.name" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list1" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.name}}
+                    <div style="background-color:#F4FA58">
+                     <p style="color:#000000"> {{item.desc}}</p>
+                    </div>
+                <span class="glyphicon glyphicon-expand" ng-click="openTaskData(item)"></span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-remove-circle" ng-click="deleteTask(item,1)"></span>
+                    </div>
+                  </div>
+
+                </div>
+              </li>
+
+
+              <li class="span3" style='margin-left:10px; width:30%'>
+                <div class="thumbnail" data-drop="true" ng-model='list2' data-jqyoui-options="{accept:'.btn-draggable:not([ng-model=list2])'}"  jqyoui-droppable="{multiple:true}">
+                  <h4 style = "font-family: 'Exo', sans-serif;">In progress!</h4>
+                  <div class="caption">
+                    <div   style = "font-family: 'Exo', sans-serif;" class="btn btn-info btn-draggable" ng-repeat="item in list2" ng-show="item.name" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list2" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.name}}
+                      <div style="background-color:#FF8000">
+                     <p style="color:#000000"> {{item.desc}}</p>
+                    </div>
+                    <span class="glyphicon glyphicon-expand" ng-click="openTaskData(item)"></span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-remove-circle" ng-click="deleteTask(item,2)"></span>
+                  </div>
+                </div>
+              </li>
+
+              <li class="span3" style='margin-left:10px; width:30%'>
+                <div class="thumbnail" data-drop="true" ng-model='list3' data-jqyoui-options="{accept:'.btn-draggable:not([ng-model=list3])'}"  jqyoui-droppable="{multiple:true}">
+                  <h4 style = "font-family: 'Exo', sans-serif;">Completed!</h4>
+                  <div class="caption">
+                    <div style = "font-family: 'Exo', sans-serif;" class="btn btn-info btn-draggable" ng-repeat="item in list3" ng-show="item.name" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list3" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.name}}
+                      <div style="background-color:#01DF3A">
+                     <p style="color:#000000"> {{item.desc}}</p>
+                    </div>
+                    <span class="glyphicon glyphicon-expand" ng-click="openTaskData(item)"></span>&nbsp;&nbsp;&nbsp; <span class="glyphicon glyphicon-remove-circle" ng-click="deleteTask(item,3)"></span>
+                  </div>
+                </div>
+              </li>
+
+            </ul>
+
+          </div>
+        </div>
+      </div>
+
+<script type="text/ng-template" id="addTaskModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Set Task data:</h3>
+        </div>
+<div class="modal-body">
+
+<div style="height:300px;">
+ <input type="text" placeholder = "Task Name" ng-model = "taskName" style="margin-top:10px;"><br>
+
+<textarea ng-model="desc" placeholder = "Give Task Description..." style="margin-top:10px;"></textarea> 
+
+ <div class="dropdown" style="margin-top:20px;"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input  placeholder = "Deadline" type="text" class="form-control" data-ng-model="deadline"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="deadline" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/></ul></div>
+
+ <!-- //<p>Selected: {{person.selected}}</p>-->
+  <ui-select ng-model="task.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
+    <ui-select-match placeholder="Task type:">{{$select.selected.name}}</ui-select-match>
+    <ui-select-choices repeat="task in taskTypes | propsFilter: {name: $select.search}">
+      <div ng-bind-html="task.name | highlight: $select.search"></div>
+    </ui-select-choices>
+  </ui-select>
+
+
+<input type="text" placeholder = "Assignee" ng-model = "assignee" style="margin-top:30px;">
+
+<ui-select ng-model="status.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
+    <ui-select-match placeholder="Task Status:">{{$select.selected.name}}</ui-select-match>
+    <ui-select-choices repeat="status in Statuses | propsFilter: {name: $select.search}">
+      <div ng-bind-html="status.name | highlight: $select.search"></div>
+    </ui-select-choices>
+  </ui-select>
+
+</div>
+</div>
+
+ <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+</script>
+
+<script type="text/ng-template" id="modifyTaskModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Modify Task data:</h3>
+        </div>
+<div class="modal-body">
+
+<div style="height:300px;">
+ <input type="text" placeholder = "Task Name" ng-model = "taskName" style="margin-top:10px;"><br>
+
+<textarea ng-model="desc" placeholder = "Give Task Description..." style="margin-top:10px;"></textarea> 
+
+ <div class="dropdown" style="margin-top:20px;"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input  placeholder = "Deadline" type="text" class="form-control" data-ng-model="deadline"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="deadline" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/></ul></div>
+
+ <!-- //<p>Selected: {{person.selected}}</p>-->
+ <!--/* <ui-select ng-model="task.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
+    <ui-select-match placeholder="Task type:">{{$select.selected.name}}</ui-select-match>
+    <ui-select-choices repeat="task in taskTypes | propsFilter: {name: $select.search}">
+      <div ng-bind-html="task.name | highlight: $select.search"></div>
+    </ui-select-choices>
+  </ui-select>*/-->
+
+
+<input type="text" placeholder = "Assignee" ng-model = "assignee" style="margin-top:30px;">
+
+<!--/*<ui-select ng-model="status.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
+    <ui-select-match placeholder="Task Status:">{{$select.selected.name}}</ui-select-match>
+    <ui-select-choices repeat="status in Statuses | propsFilter: {name: $select.search}">
+      <div ng-bind-html="status.name | highlight: $select.search"></div>
+    </ui-select-choices>
+  </ui-select>*/-->
+
+</div>
+</div>
+
+ <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+</script>
+<!-- Save project Popup -->
+<script type="text/ng-template" id="saveModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Save as Project Name:</h3>
+        </div>
+        <div class="modal-body">
+          <input type="text" placeholder = "Enter project Name" ng-model = "projectName">
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
+     <!-- Open project Popup -->
+<script type="text/ng-template" id="openModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Choose from the projects below:</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a ng-click="selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    </div>
+
+ 
+
+  </body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ng-grid.css" />
+    <link rel="stylesheet" type="text/css" href="css/datetimepicker.css" />
+    <!--<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>-->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <!--  <script data-require="angular.js@*" data-semver="1.2.0-rc1" src="http://code.angularjs.org/1.2.0rc1/angular.js"></script>-->
+    <script src="js/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.12.1.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script type="text/javascript" src="js/ng-grid.js"></script>
+
+    <!--<link rel="stylesheet" href="style.css" />-->
+    <script src="js/scrum.js"></script>
+    <script src="js/datetimepicker.js"></script>
+
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
+        @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+
+        #projectDiv {
+            color: #fff;
+            font-family: 'Exo', sans-serif;
+            font-size: 35px;
+            font-weight: 200;
+            margin-left: 10%;
+        }
+        #projectDiv span {
+            color: #5379fa !important;
+        }
+
+        .imgContainer {
+            width: 100px;
+            height: 120px;
+        }
+        .imgContainer img {
+            width: 100%;
+            height: auto;
+        }
+        .gridStyle {
+            border: 1px solid rgb(212,212,212);
+            width: 100%;
+            height: 300px
+        }
+
+        a:hover {
+            cursor:pointer;
+        }
+
+        nav {
+            margin-top: -30px;
+        }
+
+        #tab-window{
+            margin-top: -19px;
+        }
+
+    </style>
+
+</head>
+
+<body ng-controller='mainCtrl'>
+<div class="jumbotron">
+    <div class="imgContainer">
+        <img src="http://img4.wikia.nocookie.net/__cb20110805224929/mlp/images/a/a9/AiP_CM_Rainbow_Dash.svg"/>
+    </div>
+
+    <div id="projectDiv">Project<span>Manager</span></div></div>
+
+<nav class="navbar navbar-default">
+    <button class="btn btn-default btn-sm" ng-click="newProject()"><span class="glyphicon glyphicon-new-window"></span>New Project</button>
+    <button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span>Open Project</button>
+    <button class="btn btn-default btn-sm" ng-click="save('sm')"><span class="glyphicon glyphicon-save-file"></span>Save Project</button>
+    <button class="btn btn-default btn-sm" ng-click="addSprint()"> <span class="glyphicon glyphicon-plus"></span> Add new Sprint</button>
+   <button class="btn btn-default btn-sm" ng-click="projStats('sm')"><span class="glyphicon glyphicon-stats"></span> Project Status</button>
+</nav>
+
+<!-- <div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
+
+<!-- Open project Popup -->
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Choose from the projects below:</h3>
+    </div>
+    <div class="modal-body">
+        <ul>
+            <li ng-repeat="item in items">
+                <a ng-click="selected.item = item">{{ item }}</a>
+            </li>
+        </ul>
+        Selected: <b>{{ selected.item }}</b>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+<!-- Save project Popup -->
+<script type="text/ng-template" id="saveModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Save as Project Name:</h3>
+    </div>
+    <div class="modal-body">
+        <input type="text" placeholder = "Enter project Name" ng-model = "projectName">
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+<div id = "tab-window" class="tabbable tabs-left">
+    <ul class="nav nav-tabs">
+        <li ng-class="getTabClass(1)" ng-click="setActiveTab(1)"><a href="#sprints" data-toggle="tab">Sprints</a></li>
+         <li ng-class="getTabClass(2)" ng-click="setActiveTab(2)"><a href="#tasks" data-toggle="tab">Stories</a></li>
+    </ul>
+    
+      <div class="tab-content">
+        <div ng-class="getTabPaneClass(1)" id="tasks">    
+            <div class='gridStyle' ng-grid='sprintGridOptions'></div>
+           
+         </div>       
+        
+        <div ng-class="getTabPaneClass(2)" id="resources">     
+          <div class='gridStyle' ng-grid='storyGridOptions'></div>
+          <button class="btn btn-info" ng-click="addStory()" >Add Story</button>
+          &nbsp;&nbsp; <button class="btn btn-info" ng-click="saveSprint()" >Save Sprint</button>
+        </div>
+         
+      
+      </div>
+
+</div>
+</body>
+
+</html>
