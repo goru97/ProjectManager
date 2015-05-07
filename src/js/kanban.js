@@ -53,7 +53,7 @@ App.controller('kanbanCtrl', function($scope, $timeout, $http, $modal, $log, $lo
   };
 */
 
-var url = JSON.stringify($location.absUrl());
+url = JSON.stringify($location.absUrl());
 var index = url.indexOf("=");
 $scope.user_id = url.substring(index+1,url.length-1);
 

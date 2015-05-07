@@ -102,7 +102,9 @@ a:hover {
 
               <li class="span3" style='margin-left:10px; width:30%'>
                 <div class="thumbnail" data-drop="true" ng-model='list1' data-jqyoui-options="optionsList1" jqyoui-droppable="{multiple:true}">
+                
                   <h4 style = "font-family: 'Exo', sans-serif;">Future Works!</h4>
+                  <input type="text" placeholder = "Expected number of cards" ng-model = "list1Max" style="margin-top:30px;">
                   <div class="caption">
                     <div style = "font-family: 'Exo', sans-serif;" class="btn btn-info btn-draggable" ng-repeat="item in list1" ng-show="item.name" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list1" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.name}}
                     <div style="background-color:#F4FA58">
@@ -119,6 +121,7 @@ a:hover {
               <li class="span3" style='margin-left:10px; width:30%'>
                 <div class="thumbnail" data-drop="true" ng-model='list2' data-jqyoui-options="{accept:'.btn-draggable:not([ng-model=list2])'}"  jqyoui-droppable="{multiple:true}">
                   <h4 style = "font-family: 'Exo', sans-serif;">In progress!</h4>
+                  <input type="text" placeholder = "Expected number of cards" ng-model = "list2Max" style="margin-top:30px;">
                   <div class="caption">
                     <div   style = "font-family: 'Exo', sans-serif;" class="btn btn-info btn-draggable" ng-repeat="item in list2" ng-show="item.name" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list2" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.name}}
                       <div style="background-color:#FF8000">
@@ -132,6 +135,7 @@ a:hover {
               <li class="span3" style='margin-left:10px; width:30%'>
                 <div class="thumbnail" data-drop="true" ng-model='list3' data-jqyoui-options="{accept:'.btn-draggable:not([ng-model=list3])'}"  jqyoui-droppable="{multiple:true}">
                   <h4 style = "font-family: 'Exo', sans-serif;">Completed!</h4>
+                  <input type="text" placeholder = "Expected number of cards" ng-model = "list3Max" style="margin-top:30px;">
                   <div class="caption">
                     <div style = "font-family: 'Exo', sans-serif;" class="btn btn-info btn-draggable" ng-repeat="item in list3" ng-show="item.name" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list3" jqyoui-draggable="{index: {{$index}},animate:true}">{{item.name}}
                       <div style="background-color:#01DF3A">

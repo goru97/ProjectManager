@@ -9,7 +9,7 @@ var progressBarTemplate = '<progressbar animate="false" value="row.entity.progre
 var addSprintTemplate = '<div style="text-align:center; vertical-align: middle"><input style="text-align:center; vertical-align: middle" type="button" class = "btn btn-mini btn-default" value="ADD TO SPRINT" ng-click="displayData($index)" /></div>';
 
 myApp.controller('mainCtrl', function($scope, $http, $modal, $log, $location){
-     var url = JSON.stringify($location.absUrl());
+     url = JSON.stringify($location.absUrl());
 var index = url.indexOf("=");
 $scope.user_id = url.substring(index+1,url.length-1);
 

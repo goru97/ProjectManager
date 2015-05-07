@@ -11,20 +11,13 @@ var resourceTemplate = '<dropdown-multiselect model="selectedResources" options=
 
 myApp.controller('mainCtrl', function($scope, $http, $modal, $log, $location){
 
-   $scope.users = [
-        { "id": 1, "name": "Ali" },
-        { "id": 2, "name": "Sara" },
-        { "id": 3, "name": "Babak" },
-        { "id": 4, "name": "Sanaz" },
-        { "id": 5, "name": "Dariush" },
-      ];
 
       $scope.selectedResources = [];
 
 
-  var url = JSON.stringify($location.absUrl());
+   url = JSON.stringify($location.absUrl());
 var index = url.indexOf("=");
-$scope.user_id = url.substring(index+1,url.length-1);
+  $scope.user_id = url.substring(index+1,url.length-1);
 
 
   var tabClasses;
@@ -133,6 +126,7 @@ projectProgress+=  parseInt($scope.taskGridData[i].progress);
        $scope.taskGridData = [{}];
        $scope.resourceGridData = [{}];
        $scope.projectProgress = "";
+        $scope.taskColumnDefs = $scope.tempTaskColumnDefs;
     } else {
        
     }
