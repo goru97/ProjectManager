@@ -170,7 +170,7 @@ a:hover {
 
  <!-- //<p>Selected: {{person.selected}}</p>-->
   <ui-select ng-model="task.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
-    <ui-select-match placeholder="Task type:">{{$select.selected.name}}</ui-select-match>
+    <ui-select-match placeholder="Card type:">{{$select.selected.name}}</ui-select-match>
     <ui-select-choices repeat="task in taskTypes | propsFilter: {name: $select.search}">
       <div ng-bind-html="task.name | highlight: $select.search"></div>
     </ui-select-choices>
@@ -180,7 +180,7 @@ a:hover {
 <input type="text" placeholder = "Assignee" ng-model = "assignee" style="margin-top:30px;">
 
 <ui-select ng-model="status.selected" theme="select2" ng-disabled="disabled" style="margin-top:30px; min-width: 300px;">
-    <ui-select-match placeholder="Task Status:">{{$select.selected.name}}</ui-select-match>
+    <ui-select-match placeholder="Card Status:">{{$select.selected.name}}</ui-select-match>
     <ui-select-choices repeat="status in Statuses | propsFilter: {name: $select.search}">
       <div ng-bind-html="status.name | highlight: $select.search"></div>
     </ui-select-choices>
