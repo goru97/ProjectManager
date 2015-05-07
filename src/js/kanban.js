@@ -356,12 +356,12 @@ $scope.projectProgress = [
                 {
                     key: "Actual",
                     color:"#66A3FF",
-                    "values": [ [ 1025409600000 , $scope.list1.length] , [ 1028088000000 , $scope.list2.length], [ 1030766400000 , $scope.list3.length]]
+                    "values": [ [ "To-Do" , $scope.list1.length] , [ "In Progress" , $scope.list2.length], [ "Done" , $scope.list3.length]]
                 },
                 {
                     key: "Expected",
                     color: "#1919FF",
-                    "values": [ [ 1025409600000 , $scope.list1Max] , [ 1028088000000 , $scope.list2Max], [ 1030766400000 , $scope.list3Max]]
+                    "values": [ [ "To-Do" , $scope.list1Max] , [ "In Progress" , $scope.list2Max], [ "Done" , $scope.list3Max]]
                 }
             ];
 

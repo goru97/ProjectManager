@@ -94,7 +94,7 @@ a:hover {
 <button class="btn btn-default btn-sm" ng-click="newProject()"><span class="glyphicon glyphicon-new-window"></span> New Project</button> 
 <button type="button" class="btn btn-default btn-sm" ng-click="openProject()"><span class="glyphicon glyphicon-open-file"></span> Open Project</button> 
 <button class="btn btn-default btn-sm" ng-click="save('sm')"><span class="glyphicon glyphicon-save-file"></span> Save Project</button>
-<button class="btn btn-default btn-sm" ng-click="addTask('sm')"> <span class="glyphicon glyphicon-plus"></span> Add new Task</button>
+<button class="btn btn-default btn-sm" ng-click="addTask('sm')"> <span class="glyphicon glyphicon-plus"></span> Add new Card</button>
 <button class="btn btn-default btn-sm" ng-click="projStats('sm')"><span class="glyphicon glyphicon-stats"></span> Project Status</button>
 </nav>
 <div  class='kanbandiv'>
@@ -157,14 +157,14 @@ a:hover {
 
 <script type="text/ng-template" id="addTaskModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title">Set Task data:</h3>
+            <h3 class="modal-title">Set Card data:</h3>
         </div>
 <div class="modal-body">
 
 <div style="height:300px;">
- <input type="text" placeholder = "Task Name" ng-model = "taskName" style="margin-top:10px;"><br>
+ <input type="text" placeholder = "Card Name" ng-model = "taskName" style="margin-top:10px;"><br>
 
-<textarea ng-model="desc" placeholder = "Give Task Description..." style="margin-top:10px;"></textarea> 
+<textarea ng-model="desc" placeholder = "Give Card Description..." style="margin-top:10px;"></textarea> 
 
  <div class="dropdown" style="margin-top:20px;"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input  placeholder = "Deadline" type="text" class="form-control" data-ng-model="deadline"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="deadline" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/></ul></div>
 
@@ -202,9 +202,9 @@ a:hover {
 <div class="modal-body">
 
 <div style="height:300px;">
- <input type="text" placeholder = "Task Name" ng-model = "taskName" style="margin-top:10px;"><br>
+ <input type="text" placeholder = "Card Name" ng-model = "taskName" style="margin-top:10px;"><br>
 
-<textarea ng-model="desc" placeholder = "Give Task Description..." style="margin-top:10px;"></textarea> 
+<textarea ng-model="desc" placeholder = "Give Card Description..." style="margin-top:10px;"></textarea> 
 
  <div class="dropdown" style="margin-top:20px;"><a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#"><div class="input-group"><input  placeholder = "Deadline" type="text" class="form-control" data-ng-model="deadline"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div></a><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"><datetimepicker data-on-set-time="onStartTimeSet(newDate, oldDate, row.entity)" data-ng-model="deadline" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/></ul></div>
 
@@ -264,8 +264,8 @@ a:hover {
             id="exampleId"
             showxaxis = true
             showyaxis = true
-            yaxisrange = 50
-            xaxislabel = "<- Task State ->"
+            yaxisrange = 12
+            xaxislabel = "<- Project State ->"
             showlegend = true
 
             
