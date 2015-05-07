@@ -1,4 +1,4 @@
-var App = angular.module('app', ['ngDragDrop','ngSanitize', 'ui.select','ui.bootstrap', 'ui.bootstrap.datetimepicker']);
+var App = angular.module('app', ['ngDragDrop','ngSanitize', 'ui.select','ui.bootstrap', 'ui.bootstrap.datetimepicker', 'nvd3ChartDirectives']);
 
 App.filter('propsFilter', function() {
   return function(items, props) {
@@ -67,9 +67,9 @@ $scope.user_id = url.substring(index+1,url.length-1);
 
 $scope.newProject = function(){
     if (confirm("Have you saved your current Project?") == true) {
-       $scope.list1 = [{}];
-       $scope.list2 = [{}];
-       $scope.list3 = [{}];
+       $scope.list1 = [];
+       $scope.list2 = [];
+       $scope.list3 = [];
     } else {
        
     }
@@ -310,7 +310,7 @@ $scope.addTask = function (size) {
     });
   };
 
-  //Add task Box start
+  //Modify task Box start
 var modifyTask = function (size, item) {
 
 
@@ -347,6 +347,43 @@ var modifyTask = function (size, item) {
       $log.info('Modal dismissed at: ' + new Date());
     });
   };
+
+
+//Project Status Box start
+$scope.projStats = function (size) {
+
+$scope.projectProgress = [
+                {
+                    "key": "Series 1",
+                    "values": [ [ 1025409600000 , $scope.list1.length] , [ 1028088000000 , $scope.list2.length], [ 1030766400000 , $scope.list3.length]]
+                },
+                {
+                    "key": "Series 2",
+                    "values": [ [ 1025409600000 , $scope.list1Max] , [ 1028088000000 , $scope.list2Max], [ 1030766400000 , $scope.list3Max]]
+                }
+            ];
+
+    var modalInstance = $modal.open({
+      templateUrl: 'projStatsModalContent.html',
+      controller: 'projStatsModalCtrl',
+      size: size,
+      resolve: {
+        projectProgress: function () {
+          return $scope.projectProgress;
+        }
+      }
+    });
+
+    modalInstance.result.then(function () {
+
+     // alert("Done");
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+//Project Status Box end
+
+
 
 
 $scope.openTaskData = function(item){
@@ -591,6 +628,19 @@ angular.module('app').controller('OpenModalInstanceCtrl', function ($scope, $mod
 
   $scope.ok = function () {
     $modalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
+
+angular.module('app').controller('projStatsModalCtrl', function ($scope, $modalInstance, projectProgress) {
+
+
+$scope.projectProgress = projectProgress;
+  $scope.ok = function () {
+    $modalInstance.close($scope.projectProgress);
   };
 
   $scope.cancel = function () {
