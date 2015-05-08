@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 var SprintSchema = new Schema({
     project_id: {type: String, required:true},
     sprint_id: {type: String, required:true},
-    name: {type: String,unique:true},
+    name: {type: String},
     duration: {type: String},
     start: { type: Date},
     end: { type: Date},
