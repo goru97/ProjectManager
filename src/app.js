@@ -2,10 +2,10 @@ var mongoose = require('mongoose'),
     User = require('./models/user-model');
     Project = require('./models/project-model');
 
-var connStr = 'mongodb://ds031641.mongolab.com:31641/cmpe281';
+var connStr = '';
 var options = {
-  user: 'goru97',
-  pass: 'Welcome@97'
+  user: '',
+  pass: ''
 }
 mongoose.connect(connStr, options, function(err) {
     if (err) throw err;
